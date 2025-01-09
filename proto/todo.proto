@@ -1,0 +1,63 @@
+syntax = "proto3";
+
+package todo;
+
+// A single todo item
+message TodoItem {
+  string id       = 1;
+  string user_id  = 2;
+  string text     = 3;
+  bool completed  = 4;
+}
+
+// Request to create a todo
+message CreateTodoRequest {
+  string user_id = 1;
+  string text    = 2;
+}
+
+// Response containing a single todo
+message TodoResponse {
+  TodoItem todo = 1;
+}
+
+// Request to fetch all todos for a user
+message GetTodosRequest {
+  string user_id = 1;
+}
+
+// Request to fetch a single todo for a user
+message GetTodoRequest {
+  string user_id = 1;
+  string todo_id = 2;
+}
+
+// Response containing multiple todos
+message TodosResponse {
+  repeated TodoItem todos = 1;
+}
+
+// Request to update a todo by ID
+message UpdateTodoRequest {
+  string id        = 1;
+  string text      = 2;
+  bool completed   = 3;
+}
+
+// Request to delete a todo by ID
+message DeleteTodoRequest {
+  string id = 1;
+}
+
+// Service definition
+service TodoService {
+  // CRUD
+  rpc CreateTodo (CreateTodoRequest) returns (TodoResponse);
+  rpc GetTodos   (GetTodosRequest)   returns (TodosResponse);
+  rpc GetTodo    (GetTodoRequest)    returns (TodoResponse);
+  rpc UpdateTodo (UpdateTodoRequest) returns (TodoResponse);
+  rpc DeleteTodo (DeleteTodoRequest) returns (TodoResponse);
+
+  // Bidirectional streaming example (client streams user filters, server streams updates)
+  rpc StreamTodos (stream GetTodosRequest) returns (stream TodosResponse);
+}

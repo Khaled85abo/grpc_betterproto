@@ -1,0 +1,9 @@
+# the command to create client files 
+1- install protobuf from https://grpc.io/docs/protoc-installation/ with 
+ > winget install protobuf
+ > protoc --version # Ensure compiler version is 3+
+2- because this library is installed in windows, use the machine command prompt to access it and create the client files
+ C:\Users\khale\LIA\gRPC>protoc -I=./proto --ts_out=./client/src/proto --grpc-web_out=import_style=typescript,mode=grpcweb:./client/src/proto ./proto/todo.proto
+
+ # Command to create python files
+ protoc -I=proto --python_betterproto_out=server proto/todo.proto
