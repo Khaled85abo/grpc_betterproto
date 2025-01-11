@@ -3,7 +3,8 @@ import asyncio
 import uuid
 
 import betterproto
-from betterproto.grpc.util.async_grpc import AsyncIOGrpcServer
+from grpclib.server import Server as AsyncIOGrpcServer
+from grpclib.server import Stream  # This replaces Context
 
 # from todo import TodoServiceBase, CreateTodoRequest, GetTodosRequest, UpdateTodoRequest, DeleteTodoRequest, TodoResponse, TodosResponse, TodoItem
 
@@ -63,7 +64,7 @@ class TodoService(TodoServiceBase):
     async def stream_todos(
         self,
         request_iterator: AsyncIterator["GetTodosRequest"],
-        context: betterproto.grpc.Context,
+        stream: Stream,
     ) -> AsyncIterator["TodosResponse"]:
         """
         Demonstrates a bidirectional streaming method:
@@ -79,14 +80,19 @@ class TodoService(TodoServiceBase):
 
 
 async def run_grpc_server() -> None:
-    server = AsyncIOGrpcServer()
-    # Register your service
+    # Create service instance first
     service = TodoService()
-    server.add_service(service)
+    
+    # Initialize server with handlers
+    server = AsyncIOGrpcServer([service])
+    
     # Choose a port
     listen_addr = "0.0.0.0:50051"
     print(f"Starting gRPC server on {listen_addr}...")
-    await server.start(listen_addr)
+    
+    # Start server
+    host, port = listen_addr.split(':')
+    await server.start(host, int(port))
     await server.wait_closed()
 
 

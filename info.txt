@@ -5,5 +5,8 @@
 2- because this library is installed in windows, use the machine command prompt to access it and create the client files
  C:\Users\khale\LIA\gRPC>protoc -I=./proto --ts_out=./client/src/proto --grpc-web_out=import_style=typescript,mode=grpcweb:./client/src/proto ./proto/todo.proto
 
+
+# install betterproto for venv
+pip install --upgrade --pre "betterproto[compiler]==2.0.0b7"
  # Command to create python files
  protoc -I=proto --python_betterproto_out=server proto/todo.proto
